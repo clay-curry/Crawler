@@ -18,9 +18,9 @@ def start(base_url: str, num_threads: int = 1):
     logging.info(f"The crawler has started at {base_url} with {num_threads} threads.")
     # After confirming that the number of threads > 1, the function generates a list of pages immediately connected
     # to the base url.
-    """
+
     base_node = WebpageNode(url=base_url, base_url=base_url, get_site_data=True)
-    info(f"The base URL {base_node.url} crawled with status {base_node.status_code}")
+    logging.info(f"The base URL {base_node.url} crawled with status {base_node.status_code}")
     config.internal_have_visited.append(base_node)
 
     for link in base_node.get_internal_links():
@@ -48,11 +48,9 @@ def start(base_url: str, num_threads: int = 1):
 
     cache_site.set_nodes()
     print("The crawler has completed. Initialized cache with discovered data")
-    """
 
 
 def make_inner_crawlers(base_url, num_threads):
-
     # A universal lock is used to avoid racing condition, i.e. two threads access a shared variable at the same time.
     # A single lock prevents a deadlock from occurring. A priority lock ensures quicker tasks are unlocked first.
     enqueue_lock = threading.Lock()

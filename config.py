@@ -2,7 +2,7 @@ from typing import List, Deque
 from webpageNode import WebpageNode
 
 DEFAULT_BASE_URL = "https://ou.edu/cas/physics-astronomy/"
-DEFAULT_NUM_THREADS = 1
+DEFAULT_NUM_THREADS = 10
 
 internal_links_to_crawl: Deque[str] = []
 external_links_to_crawl: Deque[str] = []
