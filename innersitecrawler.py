@@ -1,4 +1,9 @@
 import config
+import logging
+from unittest import TestCase
+# info - report events that occur during normal operation of a program
+# warning - issue a warning regarding a particular runtime event
+# error - report suppression of an error without raising an exception (e.g. useful handler in a long-running process)
 from appendageCrawler import *
 import cache_site
 from webpageNode import WebpageNode
@@ -8,44 +13,42 @@ from typing import List, Deque
 
 
 def start(base_url: str, num_threads: int = 1):
-    # This function determines whether the calling function is passing valid arguments before passing them to the
-    # crawler creating function.
-    print(f"The crawler has started at {base_url} with {num_threads} threads.")
-    if num_threads < 1:
-        print(f"  Execution using {num_threads} threads is not possible")
-        return None
-    else:
-        # After confirming that the number of threads > 1, the function generates a list of pages immediately connected
-        # to the base url.
-        base_node = WebpageNode(url=base_url, base_url=base_url, get_site_data=True)
-        print(f"The base URL {base_node.url} crawled with status {base_node.status_code}")
-        config.internal_have_visited.append(base_node)
+    assert num_threads >= 1, 'You must use at least one thread for page crawling'
 
-        for link in base_node.get_internal_links():
-            if link not in config.internal_links_to_crawl:
-                config.internal_links_to_crawl.append(link)
+    logging.info(f"The crawler has started at {base_url} with {num_threads} threads.")
+    # After confirming that the number of threads > 1, the function generates a list of pages immediately connected
+    # to the base url.
+    """
+    base_node = WebpageNode(url=base_url, base_url=base_url, get_site_data=True)
+    info(f"The base URL {base_node.url} crawled with status {base_node.status_code}")
+    config.internal_have_visited.append(base_node)
 
-        for link in base_node.get_external_links():
-            if link not in config.external_links_to_crawl:
-                config.external_links_to_crawl.append(link)
+    for link in base_node.get_internal_links():
+        if link not in config.internal_links_to_crawl:
+            config.internal_links_to_crawl.append(link)
 
-        #####################################################################
-        # CRAWL WEBSITE STARTING FROM BASE URL
-        # With the base url set, the crawlers follow pages recursively to scan the entire website. Crawlers are made
-        # here
-        inner_crawlers = make_inner_crawlers(base_node, num_threads)
-        for crawler in inner_crawlers:
-            crawler.join()
+    for link in base_node.get_external_links():
+        if link not in config.external_links_to_crawl:
+            config.external_links_to_crawl.append(link)
 
-        appendage_crawlers = make_appendage_crawlers(num_threads)
-        for crawler in appendage_crawlers:
-            crawler.join()
+    #####################################################################
+    # CRAWL WEBSITE STARTING FROM BASE URL
+    # With the base url set, the crawlers follow pages recursively to scan the entire website. Crawlers are made
+    # here
+    inner_crawlers = make_inner_crawlers(base_node, num_threads)
+    for crawler in inner_crawlers:
+        crawler.join()
 
-        print(f"  Total Number of internal pages visited are {len(config.internal_have_visited)}")
-        print(f"  Total Number of external pages visited are {len(config.external_have_visited)}")
+    appendage_crawlers = make_appendage_crawlers(num_threads)
+    for crawler in appendage_crawlers:
+        crawler.join()
 
-        cache_site.set_nodes()
+    print(f"  Total Number of internal pages visited are {len(config.internal_have_visited)}")
+    print(f"  Total Number of external pages visited are {len(config.external_have_visited)}")
+
+    cache_site.set_nodes()
     print("The crawler has completed. Initialized cache with discovered data")
+    """
 
 
 def make_inner_crawlers(base_url, num_threads):

@@ -28,5 +28,3 @@ def run():
 
 
 run()
-cache_site.build_cache()
-cache_site.make_nodes()

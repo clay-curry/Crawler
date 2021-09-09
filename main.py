@@ -4,9 +4,11 @@ import __init__
 import stats
 import cache_site
 import innersitecrawler
-
+import logging
 
 def main():
+    logging.basicConfig(filename='info.log', format='%(message)s', filemode='w', level=logging.INFO)
+
     user_wants_to_use_cache = False
     user_wants_to_run_web_crawler = False
 
