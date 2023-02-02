@@ -1,5 +1,5 @@
 # Crawler
 
-No instructions; just advice:
+No instructions; just the following advice:
 
-# EXPECT SOME BUGS
+# EXPECT BUGS
